@@ -18,12 +18,14 @@ defmodule RomanNumerals do
   @doc """
   Convert the number to a roman number.
   """
-  @spec numeral(pos_integer) :: String.t()
+  @spec numeral(integer) :: String.t()
   def numeral(number) do
     to_roman(@keys, number, "")
   end
 
+  # pattern matching in function
   defp to_roman(_, 0, result), do: result
+  # as long as `number` is not 0
   defp to_roman([head | rest] = keys, number, result) do
     if number >= head do
       to_roman(keys, number - head, result <> @romana[head])
