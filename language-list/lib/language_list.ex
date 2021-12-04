@@ -4,15 +4,11 @@ defmodule LanguageList do
   end
 
   def add(list, language) do
-    [language] ++ list
+    [language | list]
   end
 
   def remove(list) do
-    if length(list) == 1 do
-      []
-    else
-      list -- [hd(list)]
-    end
+    if(length(list) == 1, do: [], else: list -- [hd(list)])
   end
 
   def first(list) do
@@ -20,7 +16,7 @@ defmodule LanguageList do
   end
 
   def count(list) do
-    Enum.reduce(list, 0, fn(_x, acc) -> acc + 1 end)
+    length(list)
   end
 
   def exciting_list?(list) do
