@@ -1,25 +1,29 @@
 defmodule LanguageList do
   def new() do
-    # Please implement the new/0 function
+    []
   end
 
   def add(list, language) do
-    # Please implement the add/2 function
+    [language] ++ list
   end
 
   def remove(list) do
-    # Please implement the remove/1 function
+    if length(list) == 1 do
+      []
+    else
+      list -- [hd(list)]
+    end
   end
 
   def first(list) do
-    # Please implement the first/1 function
+    hd(list)
   end
 
   def count(list) do
-    # Please implement the count/1 function
+    Enum.reduce(list, 0, fn(_x, acc) -> acc + 1 end)
   end
 
   def exciting_list?(list) do
-    # Please implement the exciting_list?/1 function
+    "Elixir" in list
   end
 end
