@@ -10,11 +10,11 @@ defmodule RemoteControlCar do
     %RemoteControlCar{nickname: nickname}
   end
 
-  def display_distance(remote_car) when is_struct(remote_car, RemoteControlCar) do
+  def display_distance(%RemoteControlCar{} = remote_car) do
     "#{remote_car.distance_driven_in_meters} meters"
   end
 
-  def display_battery(remote_car) when is_struct(remote_car, RemoteControlCar) do
+  def display_battery(%RemoteControlCar{} = remote_car) do
     pct = remote_car.battery_percentage
     case pct do
       0 -> "Battery empty"
@@ -22,7 +22,7 @@ defmodule RemoteControlCar do
     end
   end
 
-  def drive(remote_car) when is_struct(remote_car, RemoteControlCar) do
+  def drive(%RemoteControlCar{} = remote_car) do
     distance = remote_car.distance_driven_in_meters
     battery  = remote_car.battery_percentage
     if battery != 0 do
