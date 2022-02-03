@@ -5,23 +5,40 @@ defmodule Plot do
 end
 
 defmodule CommunityGarden do
-  def start(opts) do
-    # Please implement the start/1 function
+  def start(opts \\ []) do
+    Agent.start_link(fn -> {0, []} end, opts)
   end
 
   def list_registrations(pid) do
-    # Please implement the list_registrations/1 function
+    Agent.get(pid, fn {_, regs} -> regs end)
   end
 
-  def register(pid, register_to) do
-    # Please implement the register/2 function
+  def register(pid, name) do
+    Agent.get_and_update(pid, fn {id, regs} ->
+      new_reg = do_register_plot(id + 1, name)
+      {new_reg, {id + 1, [new_reg | regs]}}
+    end)
+  end
+
+  defp do_register_plot(id, name) do
+    %Plot{plot_id: id, registered_to: name}
   end
 
   def release(pid, plot_id) do
-    # Please implement the release/2 function
+    Agent.update(pid, fn {id, regs} ->
+      new_regs = for l <- regs, l.plot_id != plot_id, do: l
+      {id, new_regs}
+    end)
   end
 
   def get_registration(pid, plot_id) do
-    # Please implement the get_registration/2 function
+    Agent.get(pid, fn {_, regs} ->
+      ind = for l <- regs, l.plot_id == plot_id, do: l
+      find_plot_id(ind)
+    end)
   end
+
+  defp find_plot_id([]), do: {:not_found, "plot is unregistered"}
+  defp find_plot_id([owner] = [%Plot{plot_id: _id, registered_to: _name}]), do: owner
+
 end
