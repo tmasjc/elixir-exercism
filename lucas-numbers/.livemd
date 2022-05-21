@@ -1,0 +1,46 @@
+<!-- livebook:{"autosave_interval_s":null} -->
+
+# Lucas Number
+
+## Section
+
+### Problem
+
+<!-- livebook:{"break_markdown":true} -->
+
+Lucas numbers = [2, 1, 3, 4, 7, 11, 18, ...]
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Code
+
+<!-- livebook:{"break_markdown":true} -->
+
+First, generate base case
+
+```elixir
+defmodule LucasNumbers do
+  def generate(arg) when is_bitstring(arg) or arg < 1,
+    do: raise(ArgumentError, "count must be specified as an integer >= 1")
+
+  def generate(n) when is_integer(n),
+    do: Enum.to_list(generate_stream(n))
+
+  defp generate_stream(n), do: Stream.map(1..n, &number(&1))
+  defp number(1), do: 2
+  defp number(2), do: 1
+  defp number(n), do: number(n - 2) + number(n - 1)
+end
+```
+
+```elixir
+LucasNumbers.generate(10)
+```
+
+```elixir
+LucasNumbers.generate("hello world")
+```
+
+```elixir
+LucasNumbers.generate(-2)
+```
