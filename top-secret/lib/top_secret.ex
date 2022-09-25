@@ -1,13 +1,23 @@
 defmodule TopSecret do
   def to_ast(string) do
-    # Please implement the to_ast/1 function
+    {:ok, res} = Code.string_to_quoted(string)
+    res
   end
-
-  def decode_secret_message_part(ast, acc) do
-    # Please implement the decode_secret_message_part/2 function
+  def decode_secret_message_part(node = {a, _b, [{_c, _location , nil} | _ ]}, acc) when a in [:def, :defp] do
+      {node, ["" | acc]}
   end
-
+  def decode_secret_message_part(node = {_a, _b, [ {:when, _, [{c, _location, params} | _]} |_] }, acc) do
+    {node, [to_charlist(c) |> Enum.take( Enum.count(params) ) |> to_string | acc]}
+  end
+  def decode_secret_message_part(node = {a, _b, [{c, _location , params} | _ ]}, acc) when a in [:def, :defp] do
+      {node, [to_charlist(c) |> Enum.take( Enum.count(params) ) |> to_string | acc]}
+  end
+  def decode_secret_message_part(node, acc) do
+    {node, acc}
+  end
   def decode_secret_message(string) do
-    # Please implement the decode_secret_message/1 function
-  end
+    data = to_ast(string)
+    {_, acc} = Macro.prewalk(data, [], &decode_secret_message_part/2)
+    acc |> Enum.reverse() |> Enum.join()
+   end
 end
